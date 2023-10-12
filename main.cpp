@@ -199,12 +199,45 @@ int main(int nargas, char** vargs)
     std::cout << std::fixed << std::setprecision(1);
 
 	trees::ABB abb;
+	// Print the presentation of the interactive calculator
+	std::cout << "Welcome to the interactive calculator!" << std::endl;
+	std::cout << "======================================" << std::endl;
+	while(true)
+	{
+		std::string input;
+        std::cout << "Enter all the variables you want to use: ";
+        std::getline(std::cin, input);
 
-	variables['x'] = 5;
-	variables['y'] = 6;
-	variables['z'] = 2;
-	std::string exp = "1 * ( 2 + x ) - 4 / z + ( y * 2 - 2 )";
+        if (input == "FINISH") 
+		{
+            break;
+        }
+
+		// If the input is answer, print the result
+		if (input == "ANSWER") 
+		{
+			std::cout << "Result: " << ans << std::endl;
+			continue;
+		}
+
+		// Split the input by '=' to check for variable assignment
+        size_t assignmentPos = input.find('=');
+
+        if (assignmentPos != std::string::npos) 
+		{
+			// Assuming the variable name is a single character
+            char varName = input[0]; 
+            double varValue = std::stod(input.substr(assignmentPos + 1));
+
+            // Add the variable to the map
+            variables[varName] = varValue;
+		}
+
+	}
+
+	std::string exp = "1 * ( 2 + x ) - 10 / z + ( y * 2 - 2 )";
 	std::string postfix;
+	std::string modifiedExpression;
 
 	// Parse the expression to identify variables used
 	std::vector<char> usedVariables;
@@ -216,18 +249,19 @@ int main(int nargas, char** vargs)
 		}
 	}
 
-	if (!usedVariables.empty()) {
-    // Replace each variable with its assigned value
-    std::string modifiedExpression = exp;
-    for (char var : usedVariables) 
+	if (!usedVariables.empty()) 
 	{
-        int varValue = variables[var];
-		// Convert the variable char back to a string
-        std::string varName(1, var);
-        std::string varValueStr = std::to_string(varValue);
-        modifiedExpression = std::regex_replace(modifiedExpression, std::regex(varName), varValueStr);
-    }
-		postfix = infixToPostfix(modifiedExpression);
+		// Replace each variable with its assigned value
+		modifiedExpression = exp;
+		for (char var : usedVariables) 
+		{
+			int varValue = variables[var];
+			// Convert the variable char back to a string
+			std::string varName(1, var);
+			std::string varValueStr = std::to_string(varValue);
+			modifiedExpression = std::regex_replace(modifiedExpression, std::regex(varName), varValueStr);
+		}
+			postfix = infixToPostfix(modifiedExpression);
 	}
 	else
 	{
@@ -235,6 +269,7 @@ int main(int nargas, char** vargs)
 	}
 
 	std::cout << "Infix expression: " << exp << std::endl;
+	std::cout << "Infix expression w/ vars: " << modifiedExpression << std::endl;
 	std::cout << "Postfix expression: " << postfix << std::endl;
 
 	// Insert postfix expression into the tree
