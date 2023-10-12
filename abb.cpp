@@ -138,32 +138,32 @@ void ABB::traverse_rec(ABBNode* node, std::string indent) {
 		// If getData() is 43, it will print '+'
 		if (node->getData() == 43)
 		{
-			std::cout << indent << '+' << std::endl;
+			std::cout << indent << ">+" << std::endl;
 		}
 		// If getData() is 42, it will print '*'
 		else if (node->getData() == 42)
 		{
-			std::cout << indent << '*' << std::endl;
+			std::cout << indent << ">*" << std::endl;
 		}
 		// If getData() is 45, it will print '-'
 		else if (node->getData() == 45)
 		{
-			std::cout << indent << '-' << std::endl;
+			std::cout << indent << ">-" << std::endl;
 		}
 		// If getData() is 47, it will print '/'
 		else if (node->getData() == 47)
 		{
-			std::cout << indent << '/' << std::endl;
+			std::cout << indent << ">/" << std::endl;
 		}
 		// If getData() is 94, it will print '^'
 		else if (node->getData() == 94)
 		{
-			std::cout << indent << '^' << std::endl;
+			std::cout << indent << ">^" << std::endl;
 		}
 		// If getData() is a number, it will print the number
 		else
 		{
-			std::cout << indent << node->getData() << std::endl;
+			std::cout << indent << ">" << node->getData() << std::endl;
 		}
         traverse_rec(node->getLeft(), indent + "---");
         traverse_rec(node->getRight(), indent + "---");

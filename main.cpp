@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <stack>
+#include <cmath>
 
 bool isOperator(char c) {
     return c == '+' || c == '-' || c == '*' || c == '/' || c == '^';
@@ -89,6 +90,92 @@ std::string infixToPostfix(std::string s)
     return result;
 }
 
+double calculatePostfixExpression(const std::string& postfix) 
+{
+	// Initialize a stack to hold operands
+    std::stack<double> stack; 
+	// Create an input string stream to split tokens
+    std::istringstream iss(postfix); 
+    std::string token;
+
+    while (iss >> token) 
+	{
+		// Token is an operand (a number)
+        if (isdigit(token[0]) || (token[0] == '-' && token.length() > 1 && isdigit(token[1]))) 
+		{
+			// Convert the token to a double and push it onto the stack
+            double operand = stod(token); 
+            stack.push(operand); 
+        } 
+		// Token is an operator
+		else 
+		{
+            
+            if (stack.size() < 2) 
+			{
+                // Handle error condition
+				std::cerr << "Error: Not enough operands for operator " << token << std::endl;
+				return 0.0;  
+            }
+			// Pop the second operand from the stack
+            double operand2 = stack.top(); 
+            stack.pop();
+			// Pop the first operand from the stack
+            double operand1 = stack.top(); 
+            stack.pop();
+			// Push the result of addition
+            if (token == "+") 
+			{
+                stack.push(operand1 + operand2); 
+            } 
+			// Push the result of subtraction
+			else if (token == "-") 
+			{
+                stack.push(operand1 - operand2); 
+            } 
+			// Push the result of multiplication
+			else if (token == "*") 
+			{
+                stack.push(operand1 * operand2); 
+            } 
+			// Push the result of division
+			else if (token == "/") 
+			{
+                if (operand2 == 0.0) 
+				{
+					// Handle error condition
+                    std::cerr << "Error: Division by zero" << std::endl;
+					return 0.0;  
+                }
+				// Push the result of division
+                stack.push(operand1 / operand2); 
+            } 
+			// Push the result of exponentiation
+			else if (token == "^") 
+			{
+                stack.push(pow(operand1, operand2)); 
+            } 
+			// Handle unknown operators
+			else 
+			{
+                std::cerr << "Error: Unknown operator " << token << std::endl;
+                return 0.0;  
+            }
+        }
+    }
+	// The final result is at the top of the stack
+    if (stack.size() == 1) 
+	{
+        return stack.top(); 
+    } 
+	else 
+	{
+		// Handle error condition
+        std::cerr << "Error: Incomplete expression" << std::endl;
+        return 0.0;  
+    }
+}
+
 
 
 int main(int nargas, char** vargs)
@@ -103,7 +190,7 @@ int main(int nargas, char** vargs)
 		}
 	} */
 
-	std::string exp = "1 + 10"; 
+	std::string exp = "1 * (2 + 3) - 4 / 2 + ( 12 - 2 )";
 
 	// Function call 
 	std::string postfix = infixToPostfix(exp);
@@ -115,6 +202,8 @@ int main(int nargas, char** vargs)
 	abb.insertPostfix(postfix);
 	abb.updateSize();
 	abb.traverse();
+	double ans = calculatePostfixExpression(postfix);
+	std::cout << "Result: " << ans << std::endl;
 
 	return 0;
 }
