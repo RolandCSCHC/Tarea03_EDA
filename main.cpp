@@ -34,8 +34,14 @@ std::string infixToPostfix(std::string s)
         // If the character is an alphanumeric character (operand), add it to the result string
         if (isalnum(c)) 
 		{
-            result += c;
-            result += ' ';  // Add a space after the operand to separate it in the postfix expression
+            // Handle multi-digit numbers by reading characters until a non-digit is encountered
+            while (i < s.length() && (isalnum(s[i]) || s[i] == '.')) 
+			{
+                result += s[i++];
+            }
+            result += ' ';  // Add a space after the number to separate it in the postfix expression
+            // Decrement i to account for the extra increment in the loop
+            i--;
         }
         // If the character is an opening parenthesis '(', push it onto the stack
         else if (c == '(') 
