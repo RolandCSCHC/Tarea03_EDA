@@ -5,6 +5,9 @@
 #include <string>
 #include <stack>
 #include <cmath>
+#include <map>
+#include <regex>
+#include <iomanip>
 
 bool isOperator(char c) {
     return c == '+' || c == '-' || c == '*' || c == '/' || c == '^';
@@ -90,6 +93,9 @@ std::string infixToPostfix(std::string s)
     return result;
 }
 
+// Map to store variable values
+std::map<char, double> variables;
+
 double calculatePostfixExpression(const std::string& postfix) 
 {
 	// Initialize a stack to hold operands
@@ -100,13 +106,21 @@ double calculatePostfixExpression(const std::string& postfix)
 
     while (iss >> token) 
 	{
-		// Token is an operand (a number)
-        if (isdigit(token[0]) || (token[0] == '-' && token.length() > 1 && isdigit(token[1]))) 
-		{
-			// Convert the token to a double and push it onto the stack
-            double operand = stod(token); 
-            stack.push(operand); 
-        } 
+		if (isdigit(token[0]) || (token[0] == '-' && token.length() > 1 && isdigit(token[1])) || token.size() > 1) {
+            // Token is an operand (a number or a variable)
+            if (isalpha(token[0])) {
+                // Token is a variable, look up its value in the map
+                if (variables.find(token[0]) != variables.end()) {
+                    stack.push(variables[token[0]]);
+                } else {
+                    std::cerr << "Error: Variable " << token << " is not defined." << std::endl;
+                    return 0.0;  // Handle error condition
+                }
+            } else {
+                double operand = stod(token);
+                stack.push(operand);
+            }
+		}
 		// Token is an operator
 		else 
 		{
@@ -176,24 +190,49 @@ double calculatePostfixExpression(const std::string& postfix)
     }
 }
 
-
+// Global variable named ans to keep the result of the expression
+double ans = 0.0;
 
 int main(int nargas, char** vargs)
 {
+	// Set the precision to 1 decimal place
+    std::cout << std::fixed << std::setprecision(1);
+
 	trees::ABB abb;
 
-/* 	trees::ABBNode* node = nullptr;
-	for (int k = 1; k<= 8; k++ ){
-		node = abb.k_element(k);
-		if (node != nullptr){
-			std::cout << "k = " <<k << " --> "<< node->getData() << std::endl;
+	variables['x'] = 5;
+	variables['y'] = 6;
+	variables['z'] = 2;
+	std::string exp = "1 * ( 2 + x ) - 4 / z + ( y * 2 - 2 )";
+	std::string postfix;
+
+	// Parse the expression to identify variables used
+	std::vector<char> usedVariables;
+	for (char c : exp) 
+	{
+		if (isalpha(c)) 
+		{
+			usedVariables.push_back(c);
 		}
-	} */
+	}
 
-	std::string exp = "1 * (2 + 3) - 4 / 2 + ( 12 - 2 )";
-
-	// Function call 
-	std::string postfix = infixToPostfix(exp);
+	if (!usedVariables.empty()) {
+    // Replace each variable with its assigned value
+    std::string modifiedExpression = exp;
+    for (char var : usedVariables) 
+	{
+        int varValue = variables[var];
+		// Convert the variable char back to a string
+        std::string varName(1, var);
+        std::string varValueStr = std::to_string(varValue);
+        modifiedExpression = std::regex_replace(modifiedExpression, std::regex(varName), varValueStr);
+    }
+		postfix = infixToPostfix(modifiedExpression);
+	}
+	else
+	{
+		postfix = infixToPostfix(exp);
+	}
 
 	std::cout << "Infix expression: " << exp << std::endl;
 	std::cout << "Postfix expression: " << postfix << std::endl;
@@ -202,7 +241,7 @@ int main(int nargas, char** vargs)
 	abb.insertPostfix(postfix);
 	abb.updateSize();
 	abb.traverse();
-	double ans = calculatePostfixExpression(postfix);
+	ans = calculatePostfixExpression(postfix);
 	std::cout << "Result: " << ans << std::endl;
 
 	return 0;
