@@ -1,10 +1,3 @@
-/*
- * abb.cpp
- *
- *  Created on: Sep 2, 2022
- *      Author: jsaavedr
- */
-
 #include "abb.hpp"
 #include <iostream>
 

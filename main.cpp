@@ -89,13 +89,13 @@ int main(int nargas, char** vargs){
 	abb.updateSize();
 	abb.traverse();
 
-	trees::ABBNode* node = nullptr;
+/* 	trees::ABBNode* node = nullptr;
 	for (int k = 1; k<= 8; k++ ){
 		node = abb.k_element(k);
 		if (node != nullptr){
 			std::cout << "k = " <<k << " --> "<< node->getData() << std::endl;
 		}
-	}
+	} */
 
 	std::string exp = "a + b * ( c ^ d - e ) ^ ( f + g * h ) - i"; 
 

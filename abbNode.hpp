@@ -1,10 +1,3 @@
-/*
- * abbNode.h
- *
- *  Created on: Sep 2, 2022
- *      Author: jsaavedr
- */
-
 #ifndef ABBNODE_HPP_
 #define ABBNODE_HPP_
 

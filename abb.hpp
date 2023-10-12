@@ -1,10 +1,3 @@
-/*
- * abb.hpp
- *
- *  Created on: Sep 2, 2022
- *      Author: jsaavedr
- */
-
 #ifndef ABB_HPP_
 #define ABB_HPP_
 
