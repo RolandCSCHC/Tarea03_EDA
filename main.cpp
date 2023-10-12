@@ -11,11 +11,14 @@ bool isOperator(char c) {
 
 // The main function to convert infix expression 
 // to postfix expression 
-std::string infixToPostfix(std::string s) {
+std::string infixToPostfix(std::string s) 
+{
+    // Initialize an empty stack to store operators
     std::stack<char> st;
+    // Initialize an empty string to store the resulting postfix expression
     std::string result;
     
-    // Definir la precedencia de los operadores
+    // Define the precedence of operators
     std::map<char, int> precedence;
     precedence['+'] = 1;
     precedence['-'] = 1;
@@ -23,48 +26,63 @@ std::string infixToPostfix(std::string s) {
     precedence['/'] = 2;
     precedence['^'] = 3;
 
-    for (int i = 0; i < s.length(); i++) {
+    // Iterate through each character in the input infix expression
+    for (int i = 0; i < s.length(); i++) 
+	{
         char c = s[i];
 
-        // If c is a space, skip it
-        //if (c == ' ') continue;
-
-        if (isalnum(c)) {
-            // If it's a letter or a digit, add it to the output
+        // If the character is an alphanumeric character (operand), add it to the result string
+        if (isalnum(c)) 
+		{
             result += c;
-			result += ' ';
+            result += ' ';  // Add a space after the operand to separate it in the postfix expression
         }
-        else if (c == '(') {
+        // If the character is an opening parenthesis '(', push it onto the stack
+        else if (c == '(') 
+		{
             st.push(c);
         }
-        else if (c == ')') {
-            while (!st.empty() && st.top() != '(') {
+        // If the character is a closing parenthesis ')', pop operators from the stack and add them to the result
+        else if (c == ')') 
+		{
+            while (!st.empty() && st.top() != '(') 
+			{
                 result += st.top();
-				result += ' ';
+                result += ' ';  // Add a space after the operator to separate it in the postfix expression
                 st.pop();
             }
-            if (!st.empty() && st.top() == '(') {
+            // Pop the opening parenthesis from the stack
+            if (!st.empty() && st.top() == '(') 
+			{
                 st.pop();
             }
         }
-        else if (isOperator(c)) {
-            while (!st.empty() && isOperator(st.top()) && precedence[c] <= precedence[st.top()]) {
+        // If the character is an operator (+, -, *, /, ^), handle operator precedence
+        else if (isOperator(c)) 
+		{
+            while (!st.empty() && isOperator(st.top()) && precedence[c] <= precedence[st.top()]) 
+			{
                 result += st.top();
-				result += ' ';
+                result += ' ';  // Add a space after the operator to separate it in the postfix expression
                 st.pop();
             }
+            // Push the current operator onto the stack
             st.push(c);
         }
     }
 
-    while (!st.empty()) {
+    // After processing the expression, pop any remaining operators from the stack and add them to the result
+    while (!st.empty()) 
+	{
         result += st.top();
-		result += ' ';
+        result += ' ';  // Add a space after the operator to separate it in the postfix expression
         st.pop();
     }
 
+    // Return the resulting postfix expression
     return result;
 }
+
 
 
 int main(int nargas, char** vargs)
@@ -79,7 +97,7 @@ int main(int nargas, char** vargs)
 		}
 	} */
 
-	std::string exp = "3 + ( 2 + 5 )"; 
+	std::string exp = "1 + 10"; 
 
 	// Function call 
 	std::string postfix = infixToPostfix(exp);
