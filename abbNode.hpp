@@ -5,16 +5,16 @@ namespace trees {
 
 class ABBNode {
 private:
-	ABBNode* ptrLeft;
-	int data;
-	ABBNode* ptrRight;
+	char data;
 	int size;
 public:
+	ABBNode* ptrLeft;
+	ABBNode* ptrRight;
 	ABBNode();
-	ABBNode(int val);
+	ABBNode(char val);
 	void setLeft(ABBNode* node);
 	void setRight(ABBNode* node);
-	void setData(int val);
+	void setData(char val);
 	void setSize(int s);
 	ABBNode* getLeft();
 	ABBNode* getRight();

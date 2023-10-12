@@ -2,15 +2,11 @@
 
 namespace trees {
 
-ABBNode::ABBNode():
-		ptrLeft(nullptr), data(-1), ptrRight(nullptr) {
-	// TODO Auto-generated constructor stub
-}
+ABBNode::ABBNode() : 
+		ptrLeft(nullptr), data('\0'), ptrRight(nullptr), size(0) {}
 
-ABBNode::ABBNode(int val):
-		ptrLeft(nullptr), data(val), ptrRight(nullptr){
-
-}
+ABBNode::ABBNode(char val) : 
+		ptrLeft(nullptr), data(val), ptrRight(nullptr), size(1) {}
 
 void ABBNode::setLeft(ABBNode* node){
 	ptrLeft = node;
@@ -20,7 +16,7 @@ void ABBNode::setRight(ABBNode* node){
 	ptrRight = node;
 }
 
-void ABBNode::setData(int val){
+void ABBNode::setData(char val){
 	data = val;
 }
 
