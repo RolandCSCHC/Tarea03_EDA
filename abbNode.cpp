@@ -5,7 +5,7 @@
  *      Author: jsaavedr
  */
 
-#include "trees/abbNode.hpp"
+#include "abbNode.hpp"
 
 namespace trees {
 

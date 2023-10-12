@@ -8,7 +8,7 @@
 #ifndef ABB_HPP_
 #define ABB_HPP_
 
-#include "trees/abbNode.hpp"
+#include "abbNode.hpp"
 
 namespace trees {
 
