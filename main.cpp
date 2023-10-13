@@ -193,91 +193,134 @@ double calculatePostfixExpression(const std::string& postfix)
 // Global variable named ans to keep the result of the expression
 double ans = 0.0;
 
+std::string menu()
+{
+    // Print the presentation of the interactive calculator
+	std::cout << "\nWelcome to the interactive calculator!" << std::endl;
+	std::cout << "======================================" << std::endl;
+    // What the user wants to do now
+    std::cout << "What do you want to do now?" << std::endl;
+    std::cout << "1) Type EXP to type an expression" << std::endl;
+    std::cout << "2) Type ANSWER to calculate the result" << std::endl;
+    std::cout << "3) Type TREE to print the tree of your expression" << std::endl;
+    std::cout << "4) Type FINISH to finish the program" << std::endl;
+    std::string desition_input;
+    std::cout << "> ";
+    std::getline(std::cin, desition_input);
+    return desition_input;
+}
+
 int main(int nargas, char** vargs)
 {
 	// Set the precision to 1 decimal place
     std::cout << std::fixed << std::setprecision(1);
 
 	trees::ABB abb;
-	// Print the presentation of the interactive calculator
-	std::cout << "Welcome to the interactive calculator!" << std::endl;
-	std::cout << "======================================" << std::endl;
+    std::string postfix = "";
+    std::string modifiedExpression = "";
+    std::string exp_input = "";
+	
 	while(true)
 	{
-		std::string input;
-        std::cout << "Enter all the variables you want to use: ";
-        std::getline(std::cin, input);
+        std::string desition_input = menu();
+        // If the desition_input is EXP, ask for the expression
+        if (desition_input == "EXP")
+        {
+            std::cout << "Enter the expression you want to calculate: ";
+            std::getline(std::cin, exp_input);
 
-        if (input == "FINISH") 
-		{
+            // Check if exp_input has variables in it with a loop
+            for(int i = 0; i < exp_input.length(); i++)
+            {
+                // If it has variables, ask for the values of the variables
+                if (isalpha(exp_input[i]))
+                {
+                    std::cout << "Enter the value of the variable " << exp_input[i] << std::endl;
+                    std::cout << "Example: " << exp_input[i] << " = 2" << std::endl;
+                    std::string variable_input;
+                    std::cout << "> ";
+                    std::getline(std::cin, variable_input);
+
+                    // Split the variable_input by '=' to check for variable assignment
+                    size_t assignmentPos = variable_input.find('=');
+
+                    if (assignmentPos != std::string::npos) 
+                    {
+                        // Assuming the variable name is a single character
+                        char varName = variable_input[0]; 
+                        double varValue = std::stod(variable_input.substr(assignmentPos + 1));
+
+                        // Add the variable to the map
+                        variables[varName] = varValue;
+                    }
+                    else
+                    {
+                        std::cerr << "Error: Invalid variable assignment" << std::endl;
+                    }
+                }
+            }
+            // Parse the expression to identify variables used
+            std::vector<char> usedVariables;
+            for (char c : exp_input) 
+            {
+                if (isalpha(c)) 
+                {
+                    usedVariables.push_back(c);
+                }
+            }
+            if (!usedVariables.empty()) 
+            {
+                // Replace each variable with its assigned value
+                modifiedExpression = exp_input;
+                for (char var : usedVariables) 
+                {
+                    int varValue = variables[var];
+                    // Convert the variable char back to a string
+                    std::string varName(1, var);
+                    std::string varValueStr = std::to_string(varValue);
+                    modifiedExpression = std::regex_replace(modifiedExpression, std::regex(varName), varValueStr);
+                }
+                    postfix = infixToPostfix(modifiedExpression);
+            }
+            else
+            {
+                postfix = infixToPostfix(exp_input);
+            }
+            abb.insertPostfix(postfix);
+            abb.updateSize();
+            continue;
+        }
+        // If the desition_input is TREE, print the tree
+        if (desition_input == "TREE")
+        {
+            std::cout << "Infix expression: " << exp_input << std::endl;
+            std::cout << "Infix expression w/ vars: " << modifiedExpression << std::endl;
+            std::cout << "Postfix expression: " << postfix << std::endl;
+            std::cout << "Tree: \n" << std::endl;
+            abb.traverse();
+            continue;
+        }
+        // If the desition_input is ANSWER, calculate the result
+        if (desition_input == "ANSWER")
+        {
+            if (postfix == "")
+            {
+                std::cout << "\nResult: " << ans << std::endl;
+                std::cerr << "Error: There is no expression to calculate" << std::endl;
+                continue;
+            }
+            ans = calculatePostfixExpression(postfix);
+            std::cout << "\nResult: " << ans << std::endl;
+            continue;
+        }
+        // If the desition_input is FINISH, finish the program
+        if (desition_input == "FINISH") 
+        {
+            std::cout << "Finishing the program..." << std::endl;
             break;
         }
-
-		// If the input is answer, print the result
-		if (input == "ANSWER") 
-		{
-			std::cout << "Result: " << ans << std::endl;
-			continue;
-		}
-
-		// Split the input by '=' to check for variable assignment
-        size_t assignmentPos = input.find('=');
-
-        if (assignmentPos != std::string::npos) 
-		{
-			// Assuming the variable name is a single character
-            char varName = input[0]; 
-            double varValue = std::stod(input.substr(assignmentPos + 1));
-
-            // Add the variable to the map
-            variables[varName] = varValue;
-		}
-
 	}
 
-	std::string exp = "1 * ( 2 + x ) - 10 / z + ( y * 2 - 2 )";
-	std::string postfix;
-	std::string modifiedExpression;
-
-	// Parse the expression to identify variables used
-	std::vector<char> usedVariables;
-	for (char c : exp) 
-	{
-		if (isalpha(c)) 
-		{
-			usedVariables.push_back(c);
-		}
-	}
-
-	if (!usedVariables.empty()) 
-	{
-		// Replace each variable with its assigned value
-		modifiedExpression = exp;
-		for (char var : usedVariables) 
-		{
-			int varValue = variables[var];
-			// Convert the variable char back to a string
-			std::string varName(1, var);
-			std::string varValueStr = std::to_string(varValue);
-			modifiedExpression = std::regex_replace(modifiedExpression, std::regex(varName), varValueStr);
-		}
-			postfix = infixToPostfix(modifiedExpression);
-	}
-	else
-	{
-		postfix = infixToPostfix(exp);
-	}
-
-	std::cout << "Infix expression: " << exp << std::endl;
-	std::cout << "Infix expression w/ vars: " << modifiedExpression << std::endl;
-	std::cout << "Postfix expression: " << postfix << std::endl;
-
-	// Insert postfix expression into the tree
-	abb.insertPostfix(postfix);
-	abb.updateSize();
-	abb.traverse();
-	ans = calculatePostfixExpression(postfix);
-	std::cout << "Result: " << ans << std::endl;
-
+	// std::string exp = "1 * ( 2 + x ) - 10 / z + ( y * 2 - 2 )";	
 	return 0;
 }
