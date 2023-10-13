@@ -226,6 +226,7 @@ int main(int nargas, char** vargs)
         // If the desition_input is EXP, ask for the expression
         if (desition_input == "EXP")
         {
+            std::cout << "\nIf you want to use \"ans\" as a variable, type \"A\" instead" << std::endl;
             std::cout << "Enter the expression you want to calculate: ";
             std::getline(std::cin, exp_input);
 
@@ -235,12 +236,18 @@ int main(int nargas, char** vargs)
                 // If it has variables, ask for the values of the variables
                 if (isalpha(exp_input[i]))
                 {
-                    std::cout << "Enter the value of the variable " << exp_input[i] << std::endl;
-                    std::cout << "Example: " << exp_input[i] << " = 2" << std::endl;
                     std::string variable_input;
-                    std::cout << "> ";
-                    std::getline(std::cin, variable_input);
-
+                    if(exp_input[i] != 'A')
+                    {
+                        std::cout << "Enter the value of the variable " << exp_input[i] << std::endl;
+                        std::cout << "Example: " << exp_input[i] << " = 2" << std::endl;
+                        std::cout << "> ";
+                        std::getline(std::cin, variable_input);
+                    }
+                    else
+                    {
+                        variable_input = "A = " + std::to_string(ans);
+                    }
                     // Split the variable_input by '=' to check for variable assignment
                     size_t assignmentPos = variable_input.find('=');
 
@@ -293,7 +300,7 @@ int main(int nargas, char** vargs)
         // If the desition_input is TREE, print the tree
         if (desition_input == "TREE")
         {
-            std::cout << "Infix expression: " << exp_input << std::endl;
+            std::cout << "\nInfix expression: " << exp_input << std::endl;
             std::cout << "Infix expression w/ vars: " << modifiedExpression << std::endl;
             std::cout << "Postfix expression: " << postfix << std::endl;
             std::cout << "Tree: \n" << std::endl;
@@ -319,8 +326,6 @@ int main(int nargas, char** vargs)
             std::cout << "Finishing the program..." << std::endl;
             break;
         }
-	}
-
-	// std::string exp = "1 * ( 2 + x ) - 10 / z + ( y * 2 - 2 )";	
+	}	
 	return 0;
 }
