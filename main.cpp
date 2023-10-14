@@ -9,11 +9,12 @@
 #include <regex>
 #include <iomanip>
 
+// Function to check if a character is an operator
 bool isOperator(char c) {
     return c == '+' || c == '-' || c == '*' || c == '/' || c == '^';
 }
 
-// The main function to convert infix expression 
+// The function to convert infix expression 
 // to postfix expression 
 std::string infixToPostfix(std::string s) 
 {
@@ -43,7 +44,8 @@ std::string infixToPostfix(std::string s)
 			{
                 result += s[i++];
             }
-            result += ' ';  // Add a space after the number to separate it in the postfix expression
+            // Add a space after the number to separate it in the postfix expression
+            result += ' ';  
             // Decrement i to account for the extra increment in the loop
             i--;
         }
@@ -58,7 +60,8 @@ std::string infixToPostfix(std::string s)
             while (!st.empty() && st.top() != '(') 
 			{
                 result += st.top();
-                result += ' ';  // Add a space after the operator to separate it in the postfix expression
+                // Add a space after the operator to separate it in the postfix expression
+                result += ' ';  
                 st.pop();
             }
             // Pop the opening parenthesis from the stack
@@ -73,7 +76,8 @@ std::string infixToPostfix(std::string s)
             while (!st.empty() && isOperator(st.top()) && precedence[c] <= precedence[st.top()]) 
 			{
                 result += st.top();
-                result += ' ';  // Add a space after the operator to separate it in the postfix expression
+                // Add a space after the operator to separate it in the postfix expression
+                result += ' ';  
                 st.pop();
             }
             // Push the current operator onto the stack
@@ -85,7 +89,8 @@ std::string infixToPostfix(std::string s)
     while (!st.empty()) 
 	{
         result += st.top();
-        result += ' ';  // Add a space after the operator to separate it in the postfix expression
+        // Add a space after the operator to separate it in the postfix expression
+        result += ' ';  
         st.pop();
     }
 
