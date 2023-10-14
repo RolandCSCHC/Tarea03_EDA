@@ -11,6 +11,7 @@ ABB::ABB():root(nullptr) {
 	// TODO Auto-generated constructor stub
 }
 
+// This function is used to insert a postfix expression into the tree
 void ABB::insertPostfix(const std::string& postfix) 
 {
     std::stack<ABBNode*> nodeStack;
@@ -41,7 +42,12 @@ void ABB::insertPostfix(const std::string& postfix)
 			// Convert the number to a character and create a node
             ABBNode* numberNode = new ABBNode(static_cast<char>(num));
             nodeStack.push(numberNode);
-        } else if (postfix[i] == '+' || postfix[i] == '-' || postfix[i] == '*' || postfix[i] == '/' || postfix[i] == '^') 
+		// If it's an operator, create a node for it
+        } else if (postfix[i] == '+' || 
+					postfix[i] == '-' || 
+					postfix[i] == '*' || 
+					postfix[i] == '/' || 
+					postfix[i] == '^') 
 		{
             if (nodeStack.size() < 2) 
 			{
