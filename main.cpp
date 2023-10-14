@@ -101,6 +101,9 @@ std::string infixToPostfix(std::string s)
 // Map to store variable values
 std::map<char, double> variables;
 
+// Global variable named ans to keep the result of the expression
+double ans = 0.0;
+
 // Function to evaluate a postfix expression
 double calculatePostfixExpression(const std::string& postfix) 
 {
@@ -112,7 +115,11 @@ double calculatePostfixExpression(const std::string& postfix)
 
     while (iss >> token) 
 	{
-		if (isdigit(token[0]) || (token[0] == '-' && token.length() > 1 && isdigit(token[1])) || token.size() > 1) {
+		if (isdigit(token[0]) || 
+                    (token[0] == '-' && 
+                    token.length() > 1 && 
+                    isdigit(token[1])) || 
+                    token.size() > 1) {
             // Token is an operand (a number or a variable)
             if (isalpha(token[0])) {
                 // Token is a variable, look up its value in the map
@@ -120,7 +127,8 @@ double calculatePostfixExpression(const std::string& postfix)
                     stack.push(variables[token[0]]);
                 } else {
                     std::cerr << "Error: Variable " << token << " is not defined." << std::endl;
-                    return 0.0;  // Handle error condition
+                    // Handle error condition
+                    return 0.0;  
                 }
             } else {
                 double operand = stod(token);
@@ -195,9 +203,6 @@ double calculatePostfixExpression(const std::string& postfix)
         return 0.0;  
     }
 }
-
-// Global variable named ans to keep the result of the expression
-double ans = 0.0;
 
 // Function to print the menu of the interactive calculator
 std::string menu()
