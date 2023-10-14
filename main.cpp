@@ -96,6 +96,7 @@ std::string infixToPostfix(std::string s)
 // Map to store variable values
 std::map<char, double> variables;
 
+// Function to evaluate a postfix expression
 double calculatePostfixExpression(const std::string& postfix) 
 {
 	// Initialize a stack to hold operands
@@ -193,6 +194,7 @@ double calculatePostfixExpression(const std::string& postfix)
 // Global variable named ans to keep the result of the expression
 double ans = 0.0;
 
+// Function to print the menu of the interactive calculator
 std::string menu()
 {
     // Print the presentation of the interactive calculator
@@ -204,11 +206,12 @@ std::string menu()
     std::cout << "2) Type ANSWER to calculate the result" << std::endl;
     std::cout << "3) Type TREE to print the tree of your expression" << std::endl;
     std::cout << "4) Type FINISH to finish the program" << std::endl;
-    std::string desition_input;
+    std::string decision_input;
     std::cout << "> ";
-    std::getline(std::cin, desition_input);
-    return desition_input;
+    std::getline(std::cin, decision_input);
+    return decision_input;
 }
+
 
 int main(int nargas, char** vargs)
 {
@@ -222,9 +225,9 @@ int main(int nargas, char** vargs)
 	
 	while(true)
 	{
-        std::string desition_input = menu();
-        // If the desition_input is EXP, ask for the expression
-        if (desition_input == "EXP")
+        std::string decision_input = menu();
+        // If the decision_input is EXP, ask for the expression
+        if (decision_input == "EXP")
         {
             std::cout << "\nIf you want to use \"ans\" as a variable, type \"A\" instead" << std::endl;
             std::cout << "Enter the expression you want to calculate: ";
@@ -297,8 +300,8 @@ int main(int nargas, char** vargs)
             abb.updateSize();
             continue;
         }
-        // If the desition_input is TREE, print the tree
-        if (desition_input == "TREE")
+        // If the decision_input is TREE, print the tree
+        if (decision_input == "TREE")
         {
             std::cout << "\nInfix expression: " << exp_input << std::endl;
             std::cout << "Infix expression w/ vars: " << modifiedExpression << std::endl;
@@ -307,8 +310,8 @@ int main(int nargas, char** vargs)
             abb.traverse();
             continue;
         }
-        // If the desition_input is ANSWER, calculate the result
-        if (desition_input == "ANSWER")
+        // If the decision_input is ANSWER, calculate the result
+        if (decision_input == "ANSWER")
         {
             if (postfix == "")
             {
@@ -320,8 +323,8 @@ int main(int nargas, char** vargs)
             std::cout << "\nResult: " << ans << std::endl;
             continue;
         }
-        // If the desition_input is FINISH, finish the program
-        if (desition_input == "FINISH") 
+        // If the decision_input is FINISH, finish the program
+        if (decision_input == "FINISH") 
         {
             std::cout << "Finishing the program..." << std::endl;
             break;
