@@ -267,7 +267,7 @@ int main(int nargas, char** vargs)
                     }
                     // Split the variable_input by '=' to check for variable assignment
                     size_t assignmentPos = variable_input.find('=');
-
+                    // If the variable_input has an assignment operator, add the variable to the map
                     if (assignmentPos != std::string::npos) 
                     {
                         // Assuming the variable name is a single character
