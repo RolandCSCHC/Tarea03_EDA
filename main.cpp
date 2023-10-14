@@ -228,9 +228,13 @@ int main(int nargas, char** vargs)
 	// Set the precision to 1 decimal place
     std::cout << std::fixed << std::setprecision(1);
 
+    // Create an object of the ABB class
 	trees::ABB abb;
+    // Create a string to store the postfix expression
     std::string postfix = "";
+    // Create a string to store the modified expression
     std::string modifiedExpression = "";
+    // Create a string to store the expression
     std::string exp_input = "";
 	
 	while(true)
