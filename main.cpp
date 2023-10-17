@@ -205,23 +205,16 @@ double calculatePostfixExpression(const std::string& postfix)
 }
 
 // Function to print the menu of the interactive calculator
-std::string menu()
+void menu()
 {
     // Print the presentation of the interactive calculator
 	std::cout << "\nWelcome to the interactive calculator!" << std::endl;
 	std::cout << "======================================" << std::endl;
-    // What the user wants to do now
-    std::cout << "What do you want to do now?" << std::endl;
-    std::cout << "1) Type EXP to type an expression" << std::endl;
-    std::cout << "2) Type ANSWER to calculate the result" << std::endl;
-    std::cout << "3) Type TREE to print the tree of your expression" << std::endl;
-    std::cout << "4) Type FINISH to finish the program" << std::endl;
-    std::string decision_input;
-    std::cout << "> ";
-    std::getline(std::cin, decision_input);
-    return decision_input;
+    std::cout << "If you want to use \"ans\" as a variable, type \"A\" instead" << std::endl;
+    std::cout << "~Type ANSWER to calculate the result" << std::endl;
+    std::cout << "~Type TREE to display the tree" << std::endl;
+    std::cout << "~Type FINISH to finish the program" << std::endl;
 }
-
 
 int main(int nargas, char** vargs)
 {
@@ -234,31 +227,45 @@ int main(int nargas, char** vargs)
     std::string postfix = "";
     // Create a string to store the modified expression
     std::string modifiedExpression = "";
-    // Create a string to store the expression
-    std::string exp_input = "";
-	
+    // Infix expression
+    std::string infix = "";
+	menu();
 	while(true)
 	{
-        std::string decision_input = menu();
-        // If the decision_input is EXP, ask for the expression
-        if (decision_input == "EXP")
-        {
-            std::cout << "\nIf you want to use \"ans\" as a variable, type \"A\" instead" << std::endl;
-            std::cout << "Enter the expression you want to calculate: ";
-            std::getline(std::cin, exp_input);
+        std::cout << "$ ";
+        std::string decision_input = "";
+        std::getline(std::cin, decision_input);
 
-            // Check if exp_input has variables in it with a loop
-            for(int i = 0; i < exp_input.length(); i++)
+        // Split the variable_input by '=' to check for variable assignment
+        size_t assignmentPos = decision_input.find('=');
+        // If the variable_input has an assignment operator, add the variable to the map
+        if (assignmentPos != std::string::npos) 
+        {
+            // Assuming the variable name is a single character
+            char varName = decision_input[0]; 
+            double varValue = std::stod(decision_input.substr(assignmentPos + 1));
+
+            // Add the variable to the map
+            variables[varName] = varValue;
+            continue;
+        }
+        // If decision_input is an expression
+        else if (decision_input != "TREE" && decision_input != "ANSWER" && decision_input != "FINISH")
+        {
+            infix = decision_input;
+            // Check if decision_input has variables in it with a loop
+            for(int i = 0; i < decision_input.length(); i++)
             {
                 // If it has variables, ask for the values of the variables
-                if (isalpha(exp_input[i]))
+                if (isalpha(decision_input[i]))
                 {
                     std::string variable_input;
-                    if(exp_input[i] != 'A')
+                    // If the variable is not in variables map, ask for its value
+                    if(decision_input[i] != 'A' && variables.find(decision_input[i]) == variables.end())
                     {
-                        std::cout << "Enter the value of the variable " << exp_input[i] << std::endl;
-                        std::cout << "Example: " << exp_input[i] << " = 2" << std::endl;
-                        std::cout << "> ";
+                        std::cout << "Enter the value of the variable " << decision_input[i] << std::endl;
+                        std::cout << "Example: " << decision_input[i] << " = 2" << std::endl;
+                        std::cout << "$ ";
                         std::getline(std::cin, variable_input);
                     }
                     else
@@ -285,7 +292,7 @@ int main(int nargas, char** vargs)
             }
             // Parse the expression to identify variables used
             std::vector<char> usedVariables;
-            for (char c : exp_input) 
+            for (char c : decision_input) 
             {
                 if (isalpha(c)) 
                 {
@@ -295,7 +302,7 @@ int main(int nargas, char** vargs)
             if (!usedVariables.empty()) 
             {
                 // Replace each variable with its assigned value
-                modifiedExpression = exp_input;
+                modifiedExpression = decision_input;
                 for (char var : usedVariables) 
                 {
                     int varValue = variables[var];
@@ -308,24 +315,24 @@ int main(int nargas, char** vargs)
             }
             else
             {
-                postfix = infixToPostfix(exp_input);
+                postfix = infixToPostfix(decision_input);
             }
             abb.insertPostfix(postfix);
             abb.updateSize();
-            continue;
         }
         // If the decision_input is TREE, print the tree
-        if (decision_input == "TREE")
+        else if (decision_input == "TREE")
         {
-            std::cout << "\nInfix expression: " << exp_input << std::endl;
+            std::cout << "\nInfix expression: " << infix << std::endl;
             std::cout << "Infix expression w/ vars: " << modifiedExpression << std::endl;
             std::cout << "Postfix expression: " << postfix << std::endl;
             std::cout << "Tree: \n" << std::endl;
             abb.traverse();
+            std::cout << std::endl;
             continue;
         }
         // If the decision_input is ANSWER, calculate the result
-        if (decision_input == "ANSWER")
+        else if (decision_input == "ANSWER")
         {
             if (postfix == "")
             {
@@ -334,11 +341,11 @@ int main(int nargas, char** vargs)
                 continue;
             }
             ans = calculatePostfixExpression(postfix);
-            std::cout << "\nResult: " << ans << std::endl;
+            std::cout << "\nResult: " << ans << "\n" << std::endl;
             continue;
         }
         // If the decision_input is FINISH, finish the program
-        if (decision_input == "FINISH") 
+        else if (decision_input == "FINISH") 
         {
             std::cout << "Finishing the program..." << std::endl;
             break;
