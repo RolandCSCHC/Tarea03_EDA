@@ -318,6 +318,7 @@ int main(int nargas, char** vargs)
                 postfix = infixToPostfix(decision_input);
             }
             abb.insertPostfix(postfix);
+            ans = calculatePostfixExpression(postfix);
             abb.updateSize();
         }
         // If the decision_input is TREE, print the tree
